@@ -12,23 +12,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import id.ac.polinema.idealbodyweight.R;
-import id.ac.polinema.idealbodyweight.util.BrocaIndex;
+import id.ac.polinema.idealbodyweight.util.BodyMassIndex;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link BrocaIndexFragment.OnFragmentInteractionListener} interface
+ * {@link BodyMassFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class BrocaIndexFragment extends Fragment {
+public class BodyMassFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public BrocaIndexFragment() {
+    public BodyMassFragment() {
         // Required empty public constructor
     }
 
@@ -37,32 +36,30 @@ public class BrocaIndexFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_broca_index, container, false);
-        final RadioGroup genderGroup = view.findViewById(R.id.group_gender);
+        View view = inflater.inflate(R.layout.fragment_body_mass, container, false);
         final EditText heightText  = view.findViewById(R.id.input_height);
+        final EditText weightText = view.findViewById(R.id.input_weight);
 
-        Button calculateButton = view.findViewById(R.id.calculate_button);
+        Button calculateButton = view.findViewById(R.id.button_calculate);
         calculateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mListener != null) {
                     String heightString = heightText.getText().toString();
-                    int checkedId = genderGroup.getCheckedRadioButtonId();
-                    if ((checkedId != -1) && !TextUtils.isEmpty(heightString)) {
+                    String massString = weightText.getText().toString();
+                    if (!TextUtils.isEmpty(heightString) && !TextUtils.isEmpty((massString))) {
                         int height = Integer.parseInt(heightString);
-                        int gender = (checkedId == R.id.radio_male) ? BrocaIndex.MALE : BrocaIndex.FEMALE;
-                        BrocaIndex brocaIndex = new BrocaIndex(gender, height);
-                        mListener.onCalculateBrocaIndexClicked(brocaIndex.getIndex());
+                        int weight = Integer.parseInt(massString);
+                        BodyMassIndex bodyMass = new BodyMassIndex(weight, height);
+                        mListener.onCalculateBodyMassIndexClicked(bodyMass.getIndex());
                     } else {
-                        Toast.makeText(getActivity(), "Please select gender and input your height", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Please input your mass and input your height", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
         });
         return view;
     }
-
-    // TODO: Rename method, update argument and hook method into UI event
 
     @Override
     public void onAttach(Context context) {
@@ -93,6 +90,6 @@ public class BrocaIndexFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onCalculateBrocaIndexClicked(float index);
+        void onCalculateBodyMassIndexClicked(float index);
     }
 }
